@@ -26,21 +26,20 @@ class HomeState extends State<Home> {
         appBar: AppBar(
           title: const Text('Hacker News'),
         ),
-        body: Observer(
-          builder: (_) => Container(
-                child: ((_hacker_news.news != null) &&
-                        (_hacker_news.news.isNotEmpty))
-                    ? ListView.builder(
-                        itemCount: _hacker_news.news.length,
-                        itemBuilder: (_, index) {
-                          final newsAritcle = _hacker_news.news[index];
-                          return _makeArticleContainer(newsAritcle);
-                        },
-                      )
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      ),
-              ),
+        body: Container(
+          child: Observer(
+              builder: (_) => ((_hacker_news.news != null) &&
+                      (_hacker_news.news.isNotEmpty))
+                  ? ListView.builder(
+                      itemCount: _hacker_news.news.length,
+                      itemBuilder: (_, index) {
+                        final newsAritcle = _hacker_news.news[index];
+                        return _makeArticleContainer(newsAritcle);
+                      },
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    )),
         ),
 //        body: Observer(
 //          builder: (_) => RefreshIndicator(
@@ -69,9 +68,8 @@ class HomeState extends State<Home> {
               IconButton(
                 onPressed: () async {
                   // TODO : Launch URL
-                  final String fakeUrl = "http://${newsArticle.url}";
-                  if (await canLaunch(fakeUrl)) {
-                    launch(fakeUrl);
+                  if (await canLaunch(newsArticle.url)) {
+                    launch(newsArticle.url);
                   }
                 },
                 icon: Icon(Icons.launch),
