@@ -26,29 +26,44 @@ class HomeState extends State<Home> {
         appBar: AppBar(
           title: const Text('Hacker News'),
         ),
-        body: Container(
-          child: Observer(
-              builder: (_) => ((_hacker_news.news != null) &&
-                      (_hacker_news.news.isNotEmpty))
-                  ? ListView.builder(
-                      itemCount: _hacker_news.news.length,
-                      itemBuilder: (_, index) {
-                        final newsAritcle = _hacker_news.news[index];
-                        return _makeArticleContainer(newsAritcle);
-                      },
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    )),
+//        body: Container(
+//          child: Observer(
+//              builder: (_) => ((_hacker_news.news != null) &&
+//                      (_hacker_news.news.isNotEmpty))
+//                  ? ListView.builder(
+//                      itemCount: _hacker_news.news.length,
+//                      itemBuilder: (_, index) {
+//                        final newsAritcle = _hacker_news.news[index];
+//                        return _makeArticleContainer(newsAritcle);
+//                      },
+//                    )
+//                  : Center(
+//                      child: CircularProgressIndicator(),
+//                    )),
+//        ),
+        body: Observer(
+          builder: (_) => RefreshIndicator(
+                onRefresh: () async {
+                  await Future.delayed(Duration(seconds: 1));
+                  _hacker_news.increaseNewsLimit();
+                },
+                child: Container(
+                  child: Observer(
+                      builder: (_) => ((_hacker_news.news != null) &&
+                              (_hacker_news.news.isNotEmpty))
+                          ? ListView.builder(
+                              itemCount: _hacker_news.news.length,
+                              itemBuilder: (_, index) {
+                                final newsAritcle = _hacker_news.news[index];
+                                return _makeArticleContainer(newsAritcle);
+                              },
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                ),
+              ),
         ),
-//        body: Observer(
-//          builder: (_) => RefreshIndicator(
-//                onRefresh: () async {
-//                  await Future.delayed(Duration(seconds: 1));
-//                  _hacker_news.increaseNewsLimit();
-//                },
-//                child: ,
-//              ),
       );
 
   Widget _makeArticleContainer(News newsArticle) {
