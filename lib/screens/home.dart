@@ -22,16 +22,17 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Counter'),
+          title: const Text('Hacker News'),
         ),
         body: Observer(
           builder: (_) => Container(
-                child: ((_hacker_news.newsList != null) &&
-                        (_hacker_news.newsList.isNotEmpty))
+                child: ((_hacker_news.news != null) &&
+                        (_hacker_news.news.isNotEmpty))
                     ? ListView.builder(
-                        itemCount: _hacker_news.newsList.length,
+                        itemCount: _hacker_news.news.length,
                         itemBuilder: (_, index) {
-                          final newsListIndex = _hacker_news.newsList[index];
+                          final newsListIndex =
+                              _hacker_news.news[index].title ?? 'No Title';
                           return Text(
                             newsListIndex.toString(),
                           );
@@ -42,26 +43,5 @@ class HomeState extends State<Home> {
                       ),
               ),
         ),
-
-//    body: Center(
-//      child: Column(
-//        mainAxisAlignment: MainAxisAlignment.center,
-//        children: <Widget>[
-//          const Text(
-//            'You have pushed the button this many times:',
-//          ),
-//          Observer(
-//              builder: (_) => Text(
-//                '${_hacker_news.value}',
-//                style: const TextStyle(fontSize: 20),
-//              )),
-//        ],
-//      ),
-//    ),
-//    floatingActionButton: FloatingActionButton(
-//      onPressed: _hacker_news.increment,
-//      tooltip: 'Increment',
-//      child: const Icon(Icons.add),
-//    ),
       );
 }
