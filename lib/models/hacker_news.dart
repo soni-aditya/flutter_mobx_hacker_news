@@ -17,12 +17,23 @@ abstract class HackerNewsBase implements Store {
   @observable
   List<News> news = [];
 
+  @observable
+  int newsLimit = 4;
+
+  @action
+  increaseNewsLimit() {
+    newsLimit = newsLimit + 4;
+    getNewsList();
+  }
+
   @action
   getNewsList() {
     fetchNewsList().then((newsListObject) {
       newsList = newsListObject.topStoryIndexes;
-      getNews(newsList).then((listOfArticles) {
-        news = listOfArticles;
+      getNews(newsList, newsLimit).then((listOfArticles) {
+        listOfArticles.forEach((newsArticle) {
+          news.add(newsArticle);
+        });
       });
     });
   }
@@ -42,11 +53,11 @@ Future<NewsList> fetchNewsList() async {
   }
 }
 
-Future<List<News>> getNews(List newsIdList) async {
+Future<List<News>> getNews(List newsIdList, int indexRange) async {
   List<News> listOfNews = [];
 //  for (int index = 0; index < newsIdList.length; index++) {
   //Fetching only top 25 news for now
-  for (int index = 0; index < 25; index++) {
+  for (int index = (indexRange - 4); index < indexRange; index++) {
     News news = await fetchNews(int.parse(newsIdList[index].toString()));
     listOfNews.add(news);
   }

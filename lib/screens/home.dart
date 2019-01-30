@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mobx_test/models/hacker_news.dart';
+import 'package:flutter_mobx_test/serializers/news.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -31,11 +33,8 @@ class HomeState extends State<Home> {
                     ? ListView.builder(
                         itemCount: _hacker_news.news.length,
                         itemBuilder: (_, index) {
-                          final newsListIndex =
-                              _hacker_news.news[index].title ?? 'No Title';
-                          return Text(
-                            newsListIndex.toString(),
-                          );
+                          final newsAritcle = _hacker_news.news[index];
+                          return _makeArticleContainer(newsAritcle);
                         },
                       )
                     : Center(
@@ -43,5 +42,44 @@ class HomeState extends State<Home> {
                       ),
               ),
         ),
+//        body: Observer(
+//          builder: (_) => RefreshIndicator(
+//                onRefresh: () async {
+//                  await Future.delayed(Duration(seconds: 1));
+//                  _hacker_news.increaseNewsLimit();
+//                },
+//                child: ,
+//              ),
       );
+
+  Widget _makeArticleContainer(News newsArticle) {
+    return Padding(
+      key: Key(newsArticle.title),
+      padding: const EdgeInsets.all(16.0),
+      child: ExpansionTile(
+        title: Text(
+          newsArticle.title,
+          style: TextStyle(fontSize: 24.0),
+        ),
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text("${newsArticle.by} comments"),
+              IconButton(
+                onPressed: () async {
+                  // TODO : Launch URL
+                  final String fakeUrl = "http://${newsArticle.url}";
+                  if (await canLaunch(fakeUrl)) {
+                    launch(fakeUrl);
+                  }
+                },
+                icon: Icon(Icons.launch),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

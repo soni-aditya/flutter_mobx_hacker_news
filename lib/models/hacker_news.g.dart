@@ -35,8 +35,32 @@ mixin _$HackerNews on HackerNewsBase, Store {
     _$newsAtom.reportChanged();
   }
 
+  final _$newsLimitAtom = Atom(name: 'HackerNewsBase.newsLimit');
+
+  @override
+  int get newsLimit {
+    _$newsLimitAtom.reportObserved();
+    return super.newsLimit;
+  }
+
+  @override
+  set newsLimit(int value) {
+    super.newsLimit = value;
+    _$newsLimitAtom.reportChanged();
+  }
+
   final _$HackerNewsBaseActionController =
       ActionController(name: 'HackerNewsBase');
+
+  @override
+  dynamic increaseNewsLimit() {
+    final _$prevDerivation = _$HackerNewsBaseActionController.startAction();
+    try {
+      return super.increaseNewsLimit();
+    } finally {
+      _$HackerNewsBaseActionController.endAction(_$prevDerivation);
+    }
+  }
 
   @override
   dynamic getNewsList() {
