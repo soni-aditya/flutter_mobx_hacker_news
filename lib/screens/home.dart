@@ -11,30 +11,57 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   final _hacker_news = HackerNews();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _hacker_news.getNewsList();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Counter'),
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'You have pushed the button this many times:',
-          ),
-          Observer(
-              builder: (_) => Text(
-                '${_hacker_news.value}',
-                style: const TextStyle(fontSize: 20),
-              )),
-        ],
-      ),
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: _hacker_news.increment,
-      tooltip: 'Increment',
-      child: const Icon(Icons.add),
-    ),
-  );
+        appBar: AppBar(
+          title: const Text('Counter'),
+        ),
+        body: Observer(
+          builder: (_) => Container(
+                child: ((_hacker_news.newsList != null) &&
+                        (_hacker_news.newsList.isNotEmpty))
+                    ? ListView.builder(
+                        itemCount: _hacker_news.newsList.length,
+                        itemBuilder: (_, index) {
+                          final newsListIndex = _hacker_news.newsList[index];
+                          return Text(
+                            newsListIndex.toString(),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      ),
+              ),
+        ),
+
+//    body: Center(
+//      child: Column(
+//        mainAxisAlignment: MainAxisAlignment.center,
+//        children: <Widget>[
+//          const Text(
+//            'You have pushed the button this many times:',
+//          ),
+//          Observer(
+//              builder: (_) => Text(
+//                '${_hacker_news.value}',
+//                style: const TextStyle(fontSize: 20),
+//              )),
+//        ],
+//      ),
+//    ),
+//    floatingActionButton: FloatingActionButton(
+//      onPressed: _hacker_news.increment,
+//      tooltip: 'Increment',
+//      child: const Icon(Icons.add),
+//    ),
+      );
 }
