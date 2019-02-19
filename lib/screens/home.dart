@@ -13,6 +13,15 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   final _hacker_news = HackerNews();
+  final snackBar = SnackBar(
+    content: Text('News List will be update in sometime..'),
+    action: SnackBarAction(
+      label: 'Ok',
+      onPressed: () {
+        // Some code to undo the change!
+      },
+    ),
+  );
 
   @override
   void initState() {
@@ -26,26 +35,12 @@ class HomeState extends State<Home> {
         appBar: AppBar(
           title: const Text('Hacker News'),
         ),
-//        body: Container(
-//          child: Observer(
-//              builder: (_) => ((_hacker_news.news != null) &&
-//                      (_hacker_news.news.isNotEmpty))
-//                  ? ListView.builder(
-//                      itemCount: _hacker_news.news.length,
-//                      itemBuilder: (_, index) {
-//                        final newsAritcle = _hacker_news.news[index];
-//                        return _makeArticleContainer(newsAritcle);
-//                      },
-//                    )
-//                  : Center(
-//                      child: CircularProgressIndicator(),
-//                    )),
-//        ),
         body: Observer(
-          builder: (_) => RefreshIndicator(
+          builder: (context) => RefreshIndicator(
                 onRefresh: () async {
                   await Future.delayed(Duration(seconds: 1));
-                  _hacker_news.increaseNewsLimit();
+                  await _hacker_news.increaseNewsLimit();
+                  Scaffold.of(context).showSnackBar(snackBar);
                 },
                 child: Container(
                   child: Observer(
